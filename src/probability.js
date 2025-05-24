@@ -1,16 +1,18 @@
-export default class Probability {
+export class Probability {
   constructor(diceOne, diceTwo) {
     this.diceOne = diceOne;
     this.diceTwo = diceTwo;
   }
 
   getProbability() {
-    let count = 0;
+    let countOne = 0;
+    let countTwo = 0;
     this.diceOne.forEach((elemOne) => {
       this.diceTwo.forEach((elemTwo) => {
-        if (elemOne > elemTwo) count++;
+        if (elemOne > elemTwo) countOne++;
+        if (elemTwo > elemOne) countTwo++;
       });
     });
-    return count / (this.diceOne.length * this.diceTwo.length);
+    return (countOne / (countOne + countTwo)).toFixed(3);
   }
 }
