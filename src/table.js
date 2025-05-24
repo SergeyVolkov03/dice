@@ -1,7 +1,7 @@
 import { AsciiTable3 } from "ascii-table3";
 import { Probability } from "./probability.js";
 
-export default class Table {
+export class Table {
   constructor(dices) {
     this.dices = dices;
     this.body = [];
