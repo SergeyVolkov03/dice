@@ -39,4 +39,33 @@ export class Message {
   showMessageUserDice(dice) {
     console.log(`You choose the ${dice} dice.`);
   }
+
+  showMessageForRoll(isUserGuessed) {
+    const whoRoll = isUserGuessed ? "your" : "my";
+    console.log(`It's time for ${whoRoll} roll.`);
+  }
+
+  showMessageForModule() {
+    console.log("Add your number modulo 6.");
+  }
+
+  showRollValue(numberFirst, numberTwo, sum) {
+    console.log(
+      `The fair number generation result is ${numberFirst} + ${numberTwo} = ${sum} (mod 6).`
+    );
+  }
+
+  showRoolResult(isUserGuessed, result) {
+    const whoRoll = isUserGuessed ? "Your" : "My";
+    console.log(`${whoRoll} roll result is ${result}.`);
+  }
+
+  showWinnerMessage(isWinner, firstValue, secondValue) {
+    const whoWin = isWinner ? "I" : "You";
+    console.log(`${whoWin} win (${firstValue} > ${secondValue})!`);
+  }
+
+  showDrawMessage(firstValue, secondValue) {
+    console.log(`It's a draw (${firstValue} = ${secondValue})!`);
+  }
 }

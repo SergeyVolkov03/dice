@@ -6,6 +6,7 @@ import { Commands } from "./commands.js";
 import prompt from "prompt-sync";
 
 const RANGE = 1;
+const FACES = 6;
 
 export class Controller {
   constructor(dices) {
@@ -19,6 +20,8 @@ export class Controller {
     this.isUserGuessed;
     this.userDice;
     this.myDice;
+    this.myRoll;
+    this.userRoll;
   }
 
   generateMove(range) {
@@ -80,7 +83,6 @@ export class Controller {
     this.getUserSelection();
     this.showMySelection();
     this.getIsGuessed();
-    this.showChoosingDices();
   }
 
   getMyDice() {
@@ -107,7 +109,7 @@ export class Controller {
     this.message.showMessageMyDice(this.isUserGuessed, this.myDice.getFaces());
   }
 
-  showChoosingDices() {
+  getChoosingDices() {
     if (this.isUserGuessed) {
       this.message.showMessageUserIsGuessed();
       this.showUserSelectionDice();
@@ -116,5 +118,63 @@ export class Controller {
       this.showMySelectionDice();
       this.showUserSelectionDice();
     }
+  }
+
+  getMyRollValue(range) {
+    this.generateMove(range);
+    this.message.showRangeAndHmac(range, this.security.getHmac());
+    this.message.showMessageForModule();
+    this.showCommands(range);
+  }
+
+  getRoll(whoIsMove) {
+    this.message.showMessageForRoll(whoIsMove);
+    this.getMyRollValue(FACES - 1);
+    this.getUserSelection();
+    this.showMySelection();
+    this.getResultRoll(whoIsMove);
+  }
+
+  showRollValue(firstValue, seconValue, roll) {
+    this.message.showRollValue(firstValue, seconValue, roll);
+  }
+
+  showRoolResult(whoIsMove, roll, dice) {
+    this.message.showRoolResult(whoIsMove, dice.getFace(roll));
+  }
+
+  getResultRoll(isMove) {
+    const roll = (this.userValue + this.number) % FACES;
+    if (isMove) {
+      this.userRoll = roll;
+      this.showRollValue(this.userValue, this.number, this.userRoll);
+      this.showRoolResult(isMove, this.userRoll, this.userDice);
+    } else {
+      this.myRoll = roll;
+      this.showRollValue(this.number, this.userValue, this.myRoll);
+      this.showRoolResult(isMove, this.myRoll, this.myDice);
+    }
+  }
+
+  getWinnerMessage(myResult, userResult) {
+    myResult > userResult
+      ? this.message.showWinnerMessage(true, myResult, userResult)
+      : myResult < userResult
+      ? this.message.showWinnerMessage(false, userResult, myResult)
+      : this.message.showDrawMessage(myResult, userResult);
+  }
+
+  getWinner() {
+    const myResult = this.myDice.getFace(this.myRoll);
+    const userResult = this.userDice.getFace(this.userRoll);
+    this.getWinnerMessage(myResult, userResult);
+  }
+
+  getStart() {
+    this.getFirstMove();
+    this.getChoosingDices();
+    this.getRoll(this.isUserGuessed);
+    this.getRoll(!this.isUserGuessed);
+    this.getWinner();
   }
 }
