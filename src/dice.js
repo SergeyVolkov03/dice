@@ -1,10 +1,10 @@
 export class Dice {
   constructor(faces) {
-    this.faces = faces;
+    this.faces = faces.split(",").map((el) => Number(el));
   }
 
-  getFace(number) {
-    return this.faces.split[number];
+  getFace(index) {
+    return this.faces.split[index];
   }
 
   getFaces() {
