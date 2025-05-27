@@ -3,7 +3,7 @@ import { Probability } from "./probability.js";
 
 export class Table {
   constructor(dices) {
-    this.dices = dices;
+    this.dices = dices.map((dice) => dice.getFaces());
     this.body = [];
     this.table = new AsciiTable3();
   }
@@ -27,13 +27,16 @@ export class Table {
   }
 
   #generateBody() {
-    this.dices.forEach((dice) => {
-      this.body.push(this.#generateRow(dice));
-    });
+    if (!this.body.length) {
+      this.dices.forEach((dice) => {
+        this.body.push(this.#generateRow(dice));
+      });
+    }
   }
 
   #setBody() {
     this.#generateBody();
+    this.table.clearRows();
     this.table.addRowMatrix(this.body);
   }
 

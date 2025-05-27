@@ -12,12 +12,13 @@ export class Commands {
 
   generateCommandsForDices(dices) {
     dices.forEach((dice, index) => {
-      this.commands[index] = dice;
+      this.commands[index] = dice.getFaces();
     });
     this.addAdditionalCommands();
   }
 
   generateCommands(value) {
+    this.commands = {};
     if (typeof value === "number") {
       this.generateCommandsForRange(value);
     } else {
@@ -37,6 +38,9 @@ export class Commands {
   }
 
   getValueByCommand(command) {
+    if (Array.isArray(this.commands[command])) {
+      return command;
+    }
     return this.commands[command];
   }
 }

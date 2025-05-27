@@ -12,13 +12,16 @@ export class Controller {
     this.dices = dices;
     this.message = new Message();
     this.table = new Table(dices);
+    this.commands = new Commands();
     this.number;
     this.security;
-    this.commands;
     this.userValue;
+    this.isUserGuessed;
+    this.userDice;
+    this.myDice;
   }
 
-  generateFirstMove(range) {
+  generateMove(range) {
     this.number = new FairNumber(range).getNumber();
     this.security = new Security(this.number);
   }
@@ -30,25 +33,15 @@ export class Controller {
   }
 
   showCommands(value) {
-    this.commands = new Commands();
     this.commands.generateCommands(value);
     this.commands.showCommands();
   }
 
   getUserSelection() {
-    const result = this.commands.getValueByCommand(
+    this.userValue = this.commands.getValueByCommand(
       prompt()("Your selection: ")
     );
-    if (!result) {
-      console.log("Incorrect command");
-      this.getUserSelection();
-    } else {
-      this.chechOnExit(result);
-      this.chechOnHelp(result);
-
-      this.userValue = result;
-      this.showMySelection();
-    }
+    this.checkUserValue();
   }
 
   chechOnExit(value) {
@@ -62,20 +55,66 @@ export class Controller {
     }
   }
 
+  checkUserValue() {
+    if (!this.userValue && this.userValue !== 0) {
+      console.log("Incorrect command");
+      this.getUserSelection();
+    } else {
+      this.chechOnExit(this.userValue);
+      this.chechOnHelp(this.userValue);
+    }
+  }
+
   showMySelection() {
     this.message.showMySelectionAndKey(this.number, this.security.getKey());
   }
 
-  getFirstMove(range) {
-    this.generateFirstMove(range);
-    this.showFirstMove(range);
-    this.showCommands(range);
+  getIsGuessed() {
+    this.isUserGuessed = this.userValue === this.number;
+  }
+
+  getFirstMove() {
+    this.generateMove(RANGE);
+    this.showFirstMove(RANGE);
+    this.showCommands(RANGE);
     this.getUserSelection();
+    this.showMySelection();
+    this.getIsGuessed();
+    this.showChoosingDices();
+  }
+
+  getMyDice() {
+    const index = new FairNumber(this.dices.length - 1).getNumber();
+    this.myDice = this.dices[index];
+    this.dices = this.dices.filter((dice) => dice !== this.myDice);
+  }
+
+  getUserDice(index) {
+    this.userDice = this.dices[index];
+    this.dices = this.dices.filter((dice) => dice !== this.userDice);
+  }
+
+  showUserSelectionDice() {
+    this.message.showMessageChooseDice();
+    this.showCommands(this.dices);
+    this.getUserSelection();
+    this.getUserDice(Number(this.userValue));
+    this.message.showMessageUserDice(this.userDice.getFaces());
+  }
+
+  showMySelectionDice() {
+    this.getMyDice();
+    this.message.showMessageMyDice(this.isUserGuessed, this.myDice.getFaces());
+  }
+
+  showChoosingDices() {
+    if (this.isUserGuessed) {
+      this.message.showMessageUserIsGuessed();
+      this.showUserSelectionDice();
+      this.showMySelectionDice();
+    } else {
+      this.showMySelectionDice();
+      this.showUserSelectionDice();
+    }
   }
 }
-const a = new Controller([
-  [1, 2, 3, 4, 5, 6],
-  [1, 2, 3, 4, 5, 6],
-  [1, 2, 3, 4, 5, 6],
-]);
-a.getFirstMove(RANGE);

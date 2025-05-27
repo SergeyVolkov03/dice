@@ -4,7 +4,7 @@ export class Dice {
   }
 
   getFace(index) {
-    return this.faces.split[index];
+    return this.faces[index];
   }
 
   getFaces() {

@@ -11,9 +11,10 @@ export class App {
   start() {
     try {
       this.validator.checkDices(this.dices);
-      new Controller(this.dices);
+      new Controller(this.dices).getFirstMove();
     } catch (e) {
       console.log(e.message);
     }
   }
 }
+// Dice { faces: [ 1, 2, 3, 4, 5, 6 ] }
