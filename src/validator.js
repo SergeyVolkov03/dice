@@ -48,8 +48,8 @@ export class Validator {
 
   checkDices(dices) {
     this.checkDicesQuantity(dices);
-    this.checkTheSameFacesQuantity(dices);
     this.checkFacesQuantity(dices);
+    this.checkTheSameFacesQuantity(dices);
     this.checkDicesByFaceValue(dices);
   }
 }
